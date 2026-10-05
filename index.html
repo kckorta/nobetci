@@ -1,0 +1,585 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+<head>
+  <meta charset='utf-8'/>
+  <meta content='width=device-width, initial-scale=1.0' name='viewport'/>
+  <meta content='noindex, nofollow' name='robots'/>
+  <title>Nöbet Ekranı</title>
+  
+  <b:skin><![CDATA[
+    body { margin: 0 !important; padding: 0 !important; }
+    .widget, .section, #header, #sidebar, #footer { display: block !important; margin: 0 !important; padding: 0 !important; }
+  ]]></b:skin>
+
+  <style type='text/css'>
+    /*<![CDATA[*/
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%; overflow: hidden;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      transition: background 0.8s ease, color 0.8s ease;
+    }
+
+    .main-table { width: 100vw; height: 100vh; table-layout: fixed; border-collapse: collapse; padding: 8px; }
+    
+    /* 1. DERS TEMA DÜZENİ (MAVİ - YEŞİL KOYU TEMA) */
+    body.theme-lesson { background: #0f172a !important; color: #f8fafc !important; }
+    .theme-lesson .header-box, .theme-lesson .card-inner { background: #1e293b; border: 1px solid #334155; }
+    .theme-lesson .clock-text { color: #38bdf8; }
+    .theme-lesson .date-text { color: #94a3b8; }
+    .theme-lesson .title-sub { color: #64748b; }
+    .theme-lesson .timer-text { color: #4ade80; }
+    .theme-lesson .card-title { color: #38bdf8; border-bottom: 1px solid #334155; }
+    .theme-lesson .grid-table th { background: #0f172a; color: #94a3b8; border: 1px solid #334155; }
+    .theme-lesson .grid-table td { background: #0f172a; color: #cbd5e1; border: 1px solid #1e293b; }
+    .theme-lesson .grid-table td.zone-cell { background: #1e293b; color: #38bdf8; border-left: 4px solid #38bdf8; }
+    .theme-lesson .status-bg-green { background-color: #14532d !important; color: #f0fdf4 !important; }
+    .theme-lesson .status-bg-green .title-sub { color: #86efac !important; }
+    .theme-lesson .progress-container { background-color: #0f172a; }
+    .theme-lesson .progress-bar { background: linear-gradient(90deg, #38bdf8 0%, #4ade80 100%); }
+    .theme-lesson .event-badge { color: #fde047; background: #0f172a; border: 1px solid #334155; }
+    .theme-lesson .footer-inner { 
+      background: linear-gradient(135deg, #22c55e 0%, #1e293b 100%);
+      border: 1px solid #3b82f6;
+      box-shadow: inset 0 0 15px rgba(59, 130, 246, 0.1);
+    }
+    .theme-lesson .quote-author { color: #38bdf8; }
+
+    /* 2. TENEFFÜS / DERS DIŞI TEMA DÜZENİ (DAHA AÇIK KREM - AMBER - KAHVE) */
+    body.theme-break { 
+      background: linear-gradient(135deg, #2d261e 0%, #3a3023 100%) !important; 
+      color: #fef3c7 !important; 
+    }
+    .theme-break .header-box, .theme-break .card-inner { background: #443728; border: 1px solid #63513b; }
+    .theme-break .clock-text { color: #fcd34d; }
+    .theme-break .date-text { color: #e7e5e4; }
+    .theme-break .title-sub { color: #d6d3d1; }
+    .theme-break .timer-text { color: #fef08a; }
+    .theme-break .card-title { color: #fcd34d; border-bottom: 1px solid #63513b; }
+    .theme-break .grid-table th { background: #2d261e; color: #e7e5e4; border: 1px solid #574632; }
+    .theme-break .grid-table td { background: #2d261e; color: #f5f5f4; border: 1px solid #3a3023; }
+    .theme-break .grid-table td.zone-cell { background: #443728; color: #fcd34d; border-left: 4px solid #f59e0b; }
+    .theme-break .status-bg-yellow { background-color: #b45309 !important; color: #fffbeb !important; }
+    .theme-break .status-bg-yellow .title-sub { color: #fde047 !important; }
+    .theme-break .status-bg-default { background-color: transparent !important; color: #fcd34d !important; }
+    .theme-break .progress-container { background-color: #2d261e; }
+    .theme-break .progress-bar { background: linear-gradient(90deg, #f59e0b 0%, #fde047 100%); }
+    .theme-break .event-badge { color: #fef08a; background: #2d261e; border: 1px solid #78350f; }
+    .theme-break .footer-inner { 
+      background: linear-gradient(135deg, #b45309 0%, #443728 100%);
+      border: 1px solid #f59e0b;
+      box-shadow: inset 0 0 15px rgba(245, 158, 11, 0.2);
+    }
+    .theme-break .quote-author { color: #fde047; }
+
+    /* ORTAK BİLEŞENLER VE GEÇİŞLER */
+    .header-box, .card-inner, .status-cell-box, .grid-table th, .grid-table td, .footer-inner {
+      transition: background-color 0.8s ease, border-color 0.8s ease, color 0.8s ease;
+    }
+
+    .header-box { height: 18vh; position: relative; border-radius: 12px; }
+    .header-table { width: 100%; height: 100%; table-layout: fixed; text-align: center; border-collapse: collapse; }
+    
+    .clock-text { font-size: 52px; font-weight: 800; line-height: 1; letter-spacing: -0.5px; }
+    .date-text { font-size: 15px; font-weight: 600; margin-top: 6px; }
+    .title-sub { font-size: 13px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; }
+
+    .status-cell-box {
+      border-left: 1px solid #334155;
+      border-right: 1px solid #334155;
+      padding: 6px;
+      position: relative;
+    }
+
+    .status-text { font-size: 42px; font-weight: 800; margin-top: 2px; line-height: 1.15; word-wrap: break-word; }
+    .timer-text { font-size: 52px; font-weight: 800; line-height: 1; letter-spacing: -0.5px; transition: all 0.3s ease; }
+
+    /* SOFT NEON NABIZ ANIMASYONU */
+    @keyframes neonPulse {
+      0% { box-shadow: inset 0 0 10px rgba(250, 204, 21, 0.2), 0 0 10px rgba(250, 204, 21, 0.3); opacity: 1; }
+      50% { box-shadow: inset 0 0 25px rgba(245, 158, 11, 0.7), 0 0 20px rgba(245, 158, 11, 0.6); opacity: 0.85; }
+      100% { box-shadow: inset 0 0 10px rgba(250, 204, 21, 0.2), 0 0 10px rgba(250, 204, 21, 0.3); opacity: 1; }
+    }
+    .pulse-active { animation: neonPulse 1.5s infinite ease-in-out; border-radius: 8px; }
+
+    /* İLERLEME ÇUBUĞU */
+    .progress-container { width: 100%; height: 6px; position: absolute; bottom: 0; left: 0; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; overflow: hidden; }
+    .progress-bar { height: 100%; width: 0%; transition: width 1s linear; }
+
+    /* ETKİNLİK SAYAÇ ROZETİ (ORTA HİZALAMA) */
+    .event-badge { font-size: 23px; font-weight: 800; padding: 3px 12px; border-radius: 20px; display: inline-block; }
+
+    /* NÖBET TABLOSU KISMI */
+    .content-box { height: 66vh; vertical-align: top; padding-top: 6px; }
+    .card-inner { border-radius: 10px; height: 100%; padding: 8px; }
+    
+    /* BAŞLIK DÜZENİ VE ORTALANMIŞ ROZET */
+    .card-title-grid { display: table; width: 100%; padding-bottom: 4px; margin-bottom: 6px; }
+    .card-title-cell { display: table-cell; vertical-align: middle; }
+    .card-title { font-size: 17px; font-weight: 800; }
+
+    .grid-table { width: 100%; height: calc(100% - 28px); border-collapse: separate; border-spacing: 4px; table-layout: fixed; }
+    .grid-table th { font-size: 16px; font-weight: 800; border-radius: 6px; padding: 3px 0; }
+    
+    .grid-table th.today-col { 
+      background: #b45309 !important; 
+      color: #ffffff !important; 
+      border: 1px solid #f59e0b !important; 
+      font-size: 18px;
+    }
+    .theme-lesson .grid-table th.today-col {
+      background: #166534 !important;
+      border: 1px solid #22c55e !important;
+    }
+    
+    .grid-table td { font-size: 16px; font-weight: 700; text-align: center; vertical-align: middle; border-radius: 6px; word-wrap: break-word; line-height: 1.15; padding: 2px; }
+    .grid-table td.zone-cell { text-align: center; font-size: 15px; font-weight: 800; }
+    
+    .grid-table td.today-cell { 
+      background: #78350f !important; 
+      color: #fef08a !important; 
+      border: 1px solid #f59e0b !important; 
+      font-size: 18px !important; 
+      font-weight: 800 !important;
+    }
+    .theme-lesson .grid-table td.today-cell {
+      background: #14532d !important;
+      color: #fef08a !important;
+      border: 1px solid #22c55e !important;
+    }
+
+    /* FOOTER VE İLHAM KÖŞESİ */
+    .footer-box { height: 16vh; padding-top: 6px; }
+    .footer-inner { border-radius: 12px; height: 100%; padding: 10px 20px; display: flex; flex-direction: column; justify-content: space-between; }
+    .quote-box { font-size: 21px; font-weight: 700; font-style: italic; color: #f8fafc; text-align: center; line-height: 1.25; margin: auto 0; }
+    .quote-author { font-style: normal; font-weight: 800; font-size: 19px; margin-left: 8px; }
+    .footer-bottom-bar { border-top: 1px solid rgba(255,255,255,0.15); padding-top: 4px; font-size: 14px; font-weight: 800; color: #ffffff; }
+
+    /* UYARI KATMANI */
+    #alertOverlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 9999; text-align: center; vertical-align: middle; opacity: 0; transition: opacity 0.6s ease-in-out; }
+    #alertOverlay.show { opacity: 1; }
+    .alert-table { width: 100%; height: 100%; border-collapse: collapse; }
+    .alert-text { font-size: 68px; font-weight: 900; color: #ffffff; letter-spacing: 1px; padding: 20px; }
+    .alert-bg-green { background-color: #14532d; }
+    .alert-bg-yellow { background-color: #78350f; }
+    /*]]>*/
+  </style>
+</head>
+<body class='theme-lesson'>
+
+<!-- UYARI EKRANI -->
+<div id='alertOverlay'>
+  <table class='alert-table'>
+    <tr>
+      <td class='alert-text' id='alertText'>
+        1. Ders Zamanı
+      </td>
+    </tr>
+  </table>
+</div>
+
+<table class='main-table'>
+  <tr>
+    <td class='header-box'>
+      <table class='header-table'>
+        <tr>
+          <td style='width: 32%; text-align: left; padding-left: 20px;'>
+            <div class='clock-text' id='clock'>00:00:00</div>
+            <div class='date-text' id='date'>--</div>
+          </td>
+          <td class='status-cell-box' id='statusBox' style='width: 36%;'>
+            <div class='title-sub'>Mevcut Durum</div>
+            <div class='status-text' id='currentStatus'>Ders Saati Dışı</div>
+          </td>
+          <td style='width: 32%; text-align: right; padding-right: 20px;'>
+            <div class='title-sub'>Kalan Süre</div>
+            <div class='timer-text' id='remainingTime'>--</div>
+          </td>
+        </tr>
+      </table>
+      <div class='progress-container'>
+        <div class='progress-bar' id='progressBar'/>
+      </div>
+    </td>
+  </tr>
+
+  <tr>
+    <td class='content-box'>
+      <div class='card-inner'>
+        <div class='card-title card-title-grid'>
+          <div class='card-title-cell' style='width: 30%; text-align: left;'>
+            <span>Haftalık Nöbet Çizelgesi</span>
+          </div>
+          <div class='card-title-cell' style='width: 40%; text-align: center;'>
+            <div class='event-badge' id='eventBadge'>Ara Tatile: -- gün kaldı :)</div>
+          </div>
+          <div class='card-title-cell' style='width: 30%; text-align: right;'>
+            <span id='todayBadge' style='color: #f59e0b;'/>
+          </div>
+        </div>
+        <table class='grid-table' id='dutyTable'>
+          <!-- JS İle Doldurulacak -->
+        </table>
+      </div>
+    </td>
+  </tr>
+
+  <tr>
+    <td class='footer-box'>
+      <div class='footer-inner'>
+        <div class='quote-box' id='dailyQuoteBox'>
+          &quot;<span id='quoteText'>--</span>&quot; &#8212; <span class='quote-author' id='quoteAuthor'>--</span>
+        </div>
+        <div class='footer-bottom-bar'>
+          <span style='float: left;'>Y U E M K A</span>
+          <span id='weekendMessage' style='float: right; color: #facc15;'>--</span>
+        </div>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<b:section id='main' showelementwas='true'/>
+
+<script type='text/javascript'>
+  //<![CDATA[
+  
+  // TV VE GÜVENLİKSİZ (HTTP) TARAYICI DEPOLAMA YAMASI (POLYFILL)
+  var safeStorage = {
+    data: {},
+    setItem: function(key, val) {
+      try { 
+        if (typeof window.localStorage !== 'undefined') {
+          window.localStorage.setItem(key, val); 
+        } else {
+          this.data[key] = val;
+        }
+      } catch(e) { 
+        this.data[key] = val; 
+      }
+    },
+    getItem: function(key) {
+      try { 
+        if (typeof window.localStorage !== 'undefined') {
+          return window.localStorage.getItem(key); 
+        } else {
+          return this.data[key] || null;
+        }
+      } catch(e) { 
+        return this.data[key] || null; 
+      }
+    }
+  };
+
+  var schedule = [
+    {start:"08:59", end:"09:40", text:"1. Ders"},
+    {start:"09:54", end:"10:35", text:"2. Ders"},
+    {start:"10:49", end:"11:30", text:"3. Ders"},
+    {start:"11:44", end:"12:25", text:"4. Ders"},
+    {start:"13:04", end:"13:45", text:"5. Ders"},
+    {start:"13:59", end:"14:40", text:"6. Ders"},
+    {start:"14:54", end:"15:35", text:"7. Ders"}
+  ];
+
+  var days = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma"];
+
+  var dutyZones = [
+    "Bahçe Arka",
+    "Bahçe Ön",
+    "1. Kat",
+    "2. Kat",
+    "3. Kat Kısa",
+    "3. Kat Uzun"
+  ];
+
+  var weeklyDutyTable = [
+    ["İREM KAVAZ BULUT", "BUKET ÖZEN", "SEDA KİRİŞTİ", "MAHMUT NURİ DUMAN", "ZEYNEP BİLGİÇ"],
+    ["ŞÜKRİYE SANLI", "VELİ ÖNER", "İLKAY MAVİŞ TURAN", "ÖMER KARATAŞ", "HATİCE ALDIRAN"],
+    ["KENAN KILIÇ", "MELAHAT ERBAY", "EFSUN BOZAR", "YASEMİN GÜL", "BURÇİN ERTÜRK"],
+    ["ŞEYDA AKKAYA", "İLYAS AKKAYA", "BARAN BAL", "YUNUS EMRE KARATAĞ", "ESENBİKE KIZILAY"],
+    ["SERAP GÜNER", "ÜMÜT DURAN", "ESRA KILIÇ", "BARIŞ DOĞAN", "HANDAN YARDIMCI"],
+    ["FATİH GÖRAL", "CEMİLE CİHANER", "İLKNUR ÖZKAN", "YAĞMUR UYSAL", "EKREM ŞEN"]
+  ];
+
+  var quotesPool = [
+    { text: "Hayatta en hakiki mürşit ilimdir, fendir.", author: "Mustafa Kemal Atatürk" },
+    { text: "Öğrenmeyi bıraktığınızda ölmeye başlarsınız.", author: "Albert Einstein" },
+    { text: "Eğitim, bir kıvılcımla ateş yakmaktır; bir kabı doldurmak değil.", author: "Sokrates" },
+    { text: "Eğitim, dünyayı değiştirmek için kullanabileceğiniz en güçlü silahtır.", author: "Nelson Mandela" },
+    { text: "Bana söylersen unuturum, gösterirsen hatırlarım, beni dâhil edersen anlarım.", author: "Konfüçyüs" },
+    { text: "Dünle beraber gitti, düne ait ne varsa; şimdi yeni şeyler söylemek lazım.", author: "Mevlâna" },
+    { text: "Bir insana hiçbir şey öğretemezsiniz; sadece onu kendi içinde bulmasına yardımcı olabilirsiniz.", author: "Galileo Galilei" },
+    { text: "Bilgiye yapılan yatırım, en yüksek faizi getirir.", author: "Benjamin Franklin" },
+    { text: "Eğitimin kökleri acı, meyveleri tatlıdır.", author: "Aristoteles" },
+    { text: "Bilim ve sanat, takdir edilmediği yerden göç eder.", author: "İbn-i Sina" },
+    { text: "İlim ilim bilmektir, ilim kendin bilmektir.", author: "Yunus Emre" },
+    { text: "Eğer daha ileriyi görebildiysem, bu sadece devlerin omuzlarında durduğum içindir.", author: "Isaac Newton" },
+    { text: "Gelecek, hayallerinin güzelliğine inananlarındır.", author: "Eleanor Roosevelt" },
+    { text: "İlimden gidilmeyen yolun sonu karanlıktır.", author: "Hacı Bektaş-ı Veli" },
+    { text: "Bir yerde muazzam bir şey bilinmeyi bekliyor.", author: "Carl Sagan" },
+    { text: "Gençliğini eğitimle geçirmeyen bir kimse, geleceğe güvenle bakamaz.", author: "Jean-Jacques Rousseau" },
+    { text: "Çalışmak için müsait gün ve saat arama; her gün ve her saat çalışmak için müsaittir.", author: "Ali Fuad Başgil" },
+    { text: "Bir okul açan, bir hapishane kapatır.", author: "Victor Hugo" },
+    { text: "Merak etmek, öğrenmenin ve keşfetmenin anahtarıdır.", author: "Gazi Yaşargil" },
+    { text: "Çocuğa gösterilecek en büyük saygı, onun kendi başına bir şeyler yapmasına izin vermektir.", author: "Maria Montessori" }
+  ];
+
+  var lastStatus = ""; 
+  var alertTimer = null;
+
+  function toUpperTr(text) {
+    if (!text) return "";
+    return text.toLocaleUpperCase ? text.toLocaleUpperCase('tr-TR') : text.toUpperCase();
+  }
+
+  function showAlert(msg, isLesson) {
+    var overlay = document.getElementById("alertOverlay");
+    var alertText = document.getElementById("alertText");
+    if (!overlay || !alertText) return;
+
+    alertText.innerHTML = toUpperTr(msg);
+    overlay.className = isLesson ? "alert-bg-green" : "alert-bg-yellow";
+    overlay.style.display = "block";
+    
+    setTimeout(function() { overlay.className += " show"; }, 20);
+
+    if (alertTimer) clearTimeout(alertTimer);
+
+    alertTimer = setTimeout(function() {
+      overlay.className = overlay.className.replace(" show", "");
+      setTimeout(function() { overlay.style.display = "none"; }, 600);
+    }, 6000);
+  }
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+
+  function toMin(s) {
+    return parseInt(s.substring(0,2), 10) * 60 + parseInt(s.substring(3,5), 10);
+  }
+
+  function formatFriendlyTime(totalSec) {
+    if (totalSec <= 0) return "0 dk";
+    if (totalSec < 60) return totalSec + " sn";
+    var mins = Math.ceil(totalSec / 60);
+    return mins + " dk";
+  }
+
+  /* KESİN TAKVİM GÜNÜ HESABI */
+  function updateEventBadge() {
+    var now = new Date();
+    // Saat ve dakikaları sıfırlayarak sadece takvim gününe odaklanıyoruz
+    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    
+    // Target: 13 Kasım 2026 (Ay indeksi: 10 = Kasım)
+    var targetDate = new Date(2026, 10, 13);
+    
+    var diffTime = targetDate - today;
+    var diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+    
+    var eventEl = document.getElementById("eventBadge");
+    if (eventEl) {
+      if (diffDays > 0) {
+        eventEl.innerHTML = "Ara Tatile: " + diffDays + " gün kaldı";
+      } else if (diffDays === 0) {
+        eventEl.innerHTML = "Ara Tatil Bugün Başlıyor!";
+      } else {
+        eventEl.innerHTML = "Ara Tatil Başladı!";
+      }
+    }
+  }
+
+  function updateInspirationAndWeekend() {
+    var now = new Date();
+    var dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+    var selectedQuote = quotesPool[dayOfYear % quotesPool.length];
+    
+    document.getElementById("quoteText").innerHTML = selectedQuote.text;
+    document.getElementById("quoteAuthor").innerHTML = selectedQuote.author;
+
+    var dayOfWeek = now.getDay();
+    var weekendMsg = "";
+
+    if (dayOfWeek === 4) {
+      weekendMsg = "★ Hafta sonuna son 1 gün!";
+    } else if (dayOfWeek === 5) {
+      weekendMsg = "★ Hafta sonu tatiliniz güzel geçsin!";
+    } else if (dayOfWeek === 6 || dayOfWeek === 0) {
+      weekendMsg = "★ İyi tatiller! Dinlenme zamanı.";
+    } else {
+      weekendMsg = "★ Keyifli ve verimli dersler dileriz.";
+    }
+
+    document.getElementById("weekendMessage").innerHTML = weekendMsg;
+  }
+
+  function renderTable() {
+    var table = document.getElementById("dutyTable");
+    if (!table) return;
+    
+    var n = new Date();
+    var dayIndex = n.getDay();
+    var todayName = (dayIndex >= 1 && dayIndex <= 5) ? days[dayIndex - 1] : "";
+
+    document.getElementById("todayBadge").innerHTML = todayName ? "Bugün: " + todayName : "";
+
+    var html = "<thead><tr><th style='width:15%;'>Nöbet Yeri</th>";
+    for (var i = 0; i < days.length; i++) {
+      var d = days[i];
+      var isToday = (d === todayName);
+      html += "<th class='" + (isToday ? "today-col" : "") + "'>" + (isToday ? "★ " + d : d) + "</th>";
+    }
+    html += "</tr></thead><tbody>";
+
+    for (var z = 0; z < dutyZones.length; z++) {
+      html += "<tr>";
+      html += "<td class='zone-cell'>" + dutyZones[z] + "</td>";
+      for (var dIdx = 0; dIdx < days.length; dIdx++) {
+        var isTodayCell = (days[dIdx] === todayName);
+        html += "<td class='" + (isTodayCell ? "today-cell" : "") + "'>" + weeklyDutyTable[z][dIdx] + "</td>";
+      }
+      html += "</tr>";
+    }
+    html += "</tbody>";
+
+    table.innerHTML = html;
+  }
+
+  function update() {
+    var n = new Date();
+    var mins = n.getHours() * 60 + n.getMinutes() + (n.getSeconds() / 60);
+
+    var clockEl = document.getElementById("clock");
+    if (clockEl) {
+      clockEl.innerHTML = pad(n.getHours()) + ":" + pad(n.getMinutes()) + ":" + pad(n.getSeconds());
+    }
+
+    var dateEl = document.getElementById("date");
+    if (dateEl) {
+      var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      dateEl.innerHTML = n.toLocaleDateString('tr-TR', options);
+    }
+
+    var statusText = "Ders Saati Dışı";
+    var remainingText = "--";
+    var statusType = "default";
+    var progressPercent = 0;
+    var secondsLeft = 999;
+    var isLessonMode = false;
+
+    var firstStart = toMin(schedule[0].start);
+    var lastEnd = toMin(schedule[schedule.length - 1].end);
+
+    if (mins < firstStart) {
+      statusText = "Ders Hazırlık";
+      statusType = "yellow";
+      var diffSec = Math.max(0, Math.round((firstStart - mins) * 60));
+      secondsLeft = diffSec;
+      remainingText = formatFriendlyTime(diffSec);
+      progressPercent = 0;
+      isLessonMode = false;
+    } else if (mins >= lastEnd) {
+      statusText = "Dersler Tamamlandı";
+      statusType = "yellow";
+      remainingText = "0 dk";
+      progressPercent = 100;
+      isLessonMode = false;
+    } else {
+      for (var i = 0; i < schedule.length; i++) {
+        var start = toMin(schedule[i].start);
+        var end = toMin(schedule[i].end);
+
+        if (mins >= start && mins < end) {
+          statusType = "green";
+          isLessonMode = true;
+          var elapsedSec = (mins - start) * 60;
+          var totalSlotSec = (end - start) * 60;
+
+          if (elapsedSec < 60) {
+            statusText = schedule[i].text + " Zamanı";
+          } else {
+            statusText = schedule[i].text;
+          }
+
+          var diffSec1 = Math.max(0, Math.round((end - mins) * 60));
+          secondsLeft = diffSec1;
+          remainingText = formatFriendlyTime(diffSec1);
+          progressPercent = (elapsedSec / totalSlotSec) * 100;
+          break;
+        }
+
+        if (i < schedule.length - 1) {
+          var nextStart = toMin(schedule[i+1].start);
+          if (mins >= end && mins < nextStart) {
+            statusText = (i === 3) ? "Öğle Arası" : "Teneffüs";
+            statusType = "yellow";
+            isLessonMode = false;
+            var elapsedSec2 = (mins - end) * 60;
+            var totalBreakSec = (nextStart - end) * 60;
+            var diffSec2 = Math.max(0, Math.round((nextStart - mins) * 60));
+            secondsLeft = diffSec2;
+            remainingText = formatFriendlyTime(diffSec2);
+            progressPercent = (elapsedSec2 / totalBreakSec) * 100;
+            break;
+          }
+        }
+      }
+    }
+
+    if (isLessonMode) {
+      document.body.className = "theme-lesson";
+    } else {
+      document.body.className = "theme-break";
+    }
+
+    var pBar = document.getElementById("progressBar");
+    if (pBar) {
+      pBar.style.width = Math.min(100, Math.max(0, progressPercent)) + "%";
+    }
+
+    var timerEl = document.getElementById("remainingTime");
+    var statusBoxEl = document.getElementById("statusBox");
+    if (secondsLeft <= 120 && secondsLeft > 0) {
+      if (timerEl && !timerEl.classList.contains("pulse-active")) {
+        timerEl.classList.add("pulse-active");
+        if (statusBoxEl) statusBoxEl.classList.add("pulse-active");
+      }
+    } else {
+      if (timerEl && timerEl.classList.contains("pulse-active")) {
+        timerEl.classList.remove("pulse-active");
+        if (statusBoxEl) statusBoxEl.classList.remove("pulse-active");
+      }
+    }
+
+    if (lastStatus !== "" && lastStatus !== statusText && (statusText.indexOf("Zamanı") !== -1 || statusText.indexOf("Arası") !== -1)) {
+      var isLesson = statusText.indexOf("Ders") !== -1 && statusText.indexOf("Hazırlık") === -1 && statusText.indexOf("Tamamlandı") === -1;
+      showAlert(statusText, isLesson);
+    }
+    lastStatus = statusText;
+
+    var statusBox = document.getElementById("statusBox");
+    if (statusBox) {
+      if (statusType === "green") {
+        statusBox.className = "status-cell-box status-bg-green" + (secondsLeft <= 120 ? " pulse-active" : "");
+      } else if (statusType === "yellow") {
+        statusBox.className = "status-cell-box status-bg-yellow" + (secondsLeft <= 120 ? " pulse-active" : "");
+      } else {
+        statusBox.className = "status-cell-box status-bg-default" + (secondsLeft <= 120 ? " pulse-active" : "");
+      }
+    }
+
+    document.getElementById("currentStatus").innerHTML = toUpperTr(statusText);
+    document.getElementById("remainingTime").innerHTML = remainingText;
+  }
+
+  window.onload = function() {
+    renderTable();
+    updateInspirationAndWeekend();
+    updateEventBadge();
+    update();
+    setInterval(update, 1000);
+  };
+  //]]>
+</script>
+</body>
+</html>
